@@ -27,11 +27,11 @@ with open("README.md", "r", "utf-8") as f:
 setup(
       name="flatway",
       version="1.0.0",
-      description="A python package for flatting of list or tuple.",
+      description="Python package for flatting of list or tuple.",
       long_description=readme,
       long_description_content_type="text/markdown",
       author="Paiman Rasoli",
-      url="",
+      url="https://github.com/Paiman-Rasoli/flatway",
       author_email="paimanrasoli789@gmail.com",
       classifiers=[
         "Programming Language :: Python :: 3",
@@ -42,7 +42,7 @@ setup(
       license='MIT',
       keywords=['flat', 'flatten', 'flat list', 'flat tuple', 'flatway'],
          project_urls={
-        "Source": "https://github.com/psf/requests",
+        "Source": "https://github.com/Paiman-Rasoli/flatway",
     },
     package_dir={"": "src"},
     packages=["flatway"],
