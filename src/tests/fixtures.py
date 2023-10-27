@@ -51,3 +51,24 @@ def mock_tuple_with_deep_five():
             )
         )
     ))
+
+
+@pytest.fixture
+def mock_dictionary_deep_one():
+    return {"name": "Jhon", "languages": {"en": True, "per": False}, "age": 20}
+
+
+@pytest.fixture
+def mock_dictionary_deep_three():
+    return {
+        "name": "Jhon",
+        "languages": {
+            "en": True, "per": False, "info": {
+                "newChild": True,
+                "deep": {
+                    "height": 100,
+                    "ids": [1, 2, 3, 4, 5]
+                }
+            }
+        }
+        , "age": 20}
