@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, Command
 import sys
 from codecs import open
 
@@ -20,31 +20,52 @@ consider upgrading to a supported Python version.
     )
     sys.exit(1)
 
-
 with open("README.md", "r", "utf-8") as f:
     readme = f.read()
 
+
+class RunTestsCommand(Command):
+    description = 'Run unit tests'
+    user_options = []
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        import pytest
+        errno = pytest.main(['tests'])  # Replace 'tests' with the directory containing your tests
+        sys.exit(errno)
+
+
 setup(
-      name="flatway",
-      version="1.0.0",
-      description="Python package for flatting of list or tuple.",
-      long_description=readme,
-      long_description_content_type="text/markdown",
-      author="Paiman Rasoli",
-      url="https://github.com/Paiman-Rasoli/flatway",
-      author_email="paimanrasoli789@gmail.com",
-      classifiers=[
+    name="flatway",
+    version="1.0.2",
+    description="Python package for flatting of list or tuple.",
+    long_description=readme,
+    long_description_content_type="text/markdown",
+    author="Paiman Rasoli",
+    url="https://github.com/Paiman-Rasoli/flatway",
+    author_email="paimanrasoli789@gmail.com",
+    classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
-      ],
-      python_requires=">=3.5",
-      license='MIT',
-      keywords=['flat', 'flatten', 'flat list', 'flat tuple', 'flatway'],
-         project_urls={
+    ],
+    python_requires=">=3.5",
+    license='MIT',
+    keywords=['flat', 'flatten', 'flat list', 'flat tuple', 'flatway'],
+    project_urls={
         "Source": "https://github.com/Paiman-Rasoli/flatway",
     },
     package_dir={"": "src"},
     packages=["flatway"],
-      
+    install_requires=[
+        'pytest'
+    ],
+    cmdclass={
+        'test': RunTestsCommand,
+    },
 )

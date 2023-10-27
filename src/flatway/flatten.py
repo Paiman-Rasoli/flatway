@@ -1,127 +1,83 @@
-from typing import List, Union, Tuple
-import unittest
-import math
+from typing import List, Union
 import sys
 
 MAX_SIZE_INTEGER = sys.maxsize
 
 
-def _flattenIntoList(target: List , source: List, sourceLength: int, start: int, depth: int):
-      targetIndex = start
-      sourceIndex = 0
-      while(sourceIndex < sourceLength):
-            exists = bool(source[sourceIndex])
-            if exists:
-                  element = source[sourceIndex]
-                  shouldFlatten = False
-                  if depth > 0:
-                        shouldFlatten = isinstance(element, list)
-                  if shouldFlatten:
-                        elementLength = len(element)
-                        targetIndex = _flattenIntoList(target, element, elementLength, targetIndex, depth - 1)
-                  else:
-                        if targetIndex >= MAX_SIZE_INTEGER:
-                              raise Exception("index too large")
-                        else:
-                              target.append(element)
-                              targetIndex += 1
-            sourceIndex += 1
+def _flatten_into_list(target: List, source: List, source_length: int, start: int, depth: int):
+    target_index = start
+    source_index = 0
+    while source_index < source_length:
+        exists = bool(source[source_index])
+        if exists:
+            element = source[source_index]
+            should_flatten = False
+            if depth > 0:
+                should_flatten = isinstance(element, list)
+            if should_flatten:
+                target_index = _flatten_into_list(target, element, len(element), target_index, depth - 1)
+            else:
+                if target_index >= MAX_SIZE_INTEGER:
+                    raise Exception("index too large")
+                else:
+                    target.append(element)
+                    target_index += 1
+        source_index += 1
 
-      return targetIndex
-
-
-def _flattenIntoTuple(target: List , source: List, sourceLength: int, start: int, depth: int):
-      targetIndex = start
-      sourceIndex = 0
-      while(sourceIndex < sourceLength):
-            exists = bool(source[sourceIndex])
-            if exists:
-                  element = source[sourceIndex]
-                  casted = False
-                  if isinstance(element, tuple):
-                        element = list(element)
-                        casted = True
-                  shouldFlatten = False
-                  if depth > 0:
-                        shouldFlatten = isinstance(element, list)
-                  if shouldFlatten:
-                        elementLength = len(element)
-                        targetIndex = _flattenIntoTuple(target, element, elementLength, targetIndex, depth - 1)
-                  else:
-                        if targetIndex >= MAX_SIZE_INTEGER:
-                              raise Exception("index too large")
-                        else:
-                              if casted:
-                                    target.append(tuple(element))
-                                    casted = False
-                              else:
-                                    target.append(element)
-                              targetIndex += 1
-                              casted = False
-            sourceIndex += 1
-
-      return targetIndex
+    return source_index
 
 
-def flatten(input: Union[List, tuple], depth = 1) -> Union[List, tuple]:
-      """
-        Returns a new list or tuple with all sub-child elements concatenated into it recursively up to the specified depth.
+def _flatten_into_tuple(target: List, source: List, source_length: int, start: int, depth: int):
+    target_index = start
+    source_index = 0
+    while source_index < source_length:
+        exists = bool(source[source_index])
+        if exists:
+            element = source[source_index]
+            casted = False
+            if isinstance(element, tuple):
+                element = list(element)
+                casted = True
+            should_flatten = False
+            if depth > 0:
+                should_flatten = isinstance(element, list)
+            if should_flatten:
+                target_index = _flatten_into_tuple(target, element, len(element), target_index, depth - 1)
+            else:
+                if target_index >= MAX_SIZE_INTEGER:
+                    raise Exception("index too large")
+                else:
+                    if casted:
+                        target.append(tuple(element))
+                    else:
+                        target.append(element)
+                target_index += 1
+        source_index += 1
 
-        Args:
-            input (List | Tuple) The list or tuple that must flat.
-            depth (int) The depth, default = 1
-      
-        Returns:
-              List: A flatten list or tuple
-      """
-      isTuple = isinstance(input, tuple)
-      if not isinstance(input, (list, tuple)):
-            raise Exception("The argument must have type list or tuple.")
-      sourceLength = len(input)
-      temp = []
-      if isTuple:
-            _flattenIntoTuple(temp, list(input), sourceLength, 0, depth)
-      else:
-            _flattenIntoList(temp, input, sourceLength, 0, depth)
-
-      if isTuple:
-            return tuple(temp)
-
-      return temp
-
-
-class TestFlatten(unittest.TestCase):
-
-      def test_flatten_of_a_list(self):
-            mockList = [1,2,3,4,5,[6,7,8,9]]
-            expect = [1,2,3,4,5,6,7,8,9]
-            flattenResult = flatten(mockList)
-
-            self.assertListEqual(flattenResult , expect)
-            self.assertEqual(flattenResult is expect, False)
-
-      def test_flatten_of_a_tuple(self):
-            mockTuple = (1,2,3,(4,5))
-            expect = (1,2,3,4,5)
-            flattenResult = flatten(mockTuple)
-
-            self.assertTupleEqual(flattenResult , expect)
-
-      def test_flatten_of_list_with_deep(self):
-            mockList = [1,2,3,[4,5,6,[7,8,[9,10]]]]
-            expect = list(range(1,11))
-            flattenResult = flatten(mockList, 3)
-
-            self.assertListEqual(flattenResult , expect)
-            
-      def test_flatten_of_tuple_with_deep(self):
-            mockTuple = (1,2,3,(4,5,6,(7,8,(9,10))))
-            expect = tuple(range(1,11))
-            flattenResult = flatten(mockTuple , 3)
-            
-            self.assertTupleEqual(flattenResult , expect)
+    return target_index
 
 
+def flatten(input_: Union[List, tuple], depth=1) -> Union[List, tuple]:
+    """
+      Returns a new list or tuple with all sub-child elements concatenated into it recursively up to the specified depth.
 
-if __name__ == "__main__":
-      unittest.main()
+      Args:
+          input_ (List | Tuple) The list or tuple that must flat.
+          depth (int) The depth, default = 1
+
+      Returns:
+            List: A flatten list or tuple
+    """
+    is_tuple = isinstance(input_, tuple)
+    if not isinstance(input_, (list, tuple)):
+        raise Exception("The argument must have type list or tuple.")
+    result = []
+    if is_tuple:
+        _flatten_into_tuple(result, list(input_), len(input_), 0, depth)
+    else:
+        _flatten_into_list(result, input_, len(input_), 0, depth)
+
+    if is_tuple:
+        return tuple(result)
+
+    return result
