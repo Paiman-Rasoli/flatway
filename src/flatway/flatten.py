@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import List, Union, Dict
 import sys
 
 MAX_SIZE_INTEGER = sys.maxsize
@@ -80,4 +80,35 @@ def flatten(input_: Union[List, tuple], depth=1) -> Union[List, tuple]:
     if is_tuple:
         return tuple(result)
 
+    return result
+
+
+def _flatten_into_dict(source: Dict, target, depth: int):
+    for key, value in source.items():
+        if isinstance(value , dict):
+            should_flatten = False
+            if depth > 0:
+                should_flatten = True
+            if should_flatten:
+                _flatten_into_dict(value, target, depth - 1)
+            else:
+                target.update({key : value})
+        else:
+            target.update({key : value})
+    return target
+
+
+def flattenDict(input_: Dict, depth=1):
+    """
+    Args:
+        input_: (dict)
+        depth: (int) default 1
+
+    Returns:
+        Return a new dictionary with appending all sub dictionaries to the parent.
+    """
+    if not isinstance(input_, dict):
+        raise Exception("The argument must have type dict.")
+    result = {}
+    _flatten_into_dict(input_, result, depth)
     return result
