@@ -42,8 +42,8 @@ class RunTestsCommand(Command):
 
 setup(
     name="flatway",
-    version="1.0.2",
-    description="Python package for flatting of list or tuple.",
+    version="2.0.0",
+    description="Python package for flatting of list, tuple or dictionary.",
     long_description=readme,
     long_description_content_type="text/markdown",
     author="Paiman Rasoli",
@@ -56,7 +56,7 @@ setup(
     ],
     python_requires=">=3.5",
     license='MIT',
-    keywords=['flat', 'flatten', 'flat list', 'flat tuple', 'flatway'],
+    keywords=['flat', 'flatten', 'flat list', 'flat tuple', 'flatway', 'flatdict'],
     project_urls={
         "Source": "https://github.com/Paiman-Rasoli/flatway",
     },
